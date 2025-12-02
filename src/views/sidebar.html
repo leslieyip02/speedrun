@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <link rel="stylesheet" href="{{styles}}">
+    <link rel="stylesheet" href="{{codicons}}">
 </head>
 
 <script>
@@ -37,58 +38,63 @@
     };
 
     const addSplit = () => {
-        splitNames.push("-");
         vscode.postMessage({
             messageType: "addSplit",
         });
     };
 
-    let splits = [];
-    let splitNames = ["-"];
-    let currentSplitView = null;
+    let currentSplitRow = null;
+    let footerTimeView = null;
 
     const splitIndexToElementId = (splitIndex) => {
         return `split-${splitIndex}`;
     };
 
     const syncTimer = (message) => {
-        document.getElementById("currentTimeString").textContent = message.fullString;
-        if (!currentSplitView) {
+        if (!footerTimeView) {
+            footerTimeView = document.getElementById("footer__time");
+        }
+        footerTimeView.textContent = message.fullString;
+
+        if (!currentSplitRow) {
             return;
         }
-        currentSplitView.children[2].textContent = message.splitString;
+        currentSplitRow.children[2].textContent = message.splitString;
     };
 
-    const updateSplitName = (value, splitIndex) => {
-        splitNames[splitIndex] = value;
-    };
-
-    const createSplitView = (split, splitIndex) => {
-        const splitView = document.createElement("tr");
-        splitView.id = splitIndexToElementId(splitIndex);
-        splitView.innerHTML = `
+    const createSplitRow = (split, splitIndex) => {
+        const splitRow = document.createElement("tr");
+        splitRow.id = splitIndexToElementId(splitIndex);
+        splitRow.innerHTML = `
             <td>
-                <input
-                    type="text"
-                    onchange="updateSplitName(this.value, splitIndex)"
-                    value=${splitNames[splitIndex]}
-                />
+                <input type="text" value="-" />
             </td>
             <td>-</td>
             <td>${split.splitString}</td>`;
-        return splitView
+        return splitRow;
+    };
+
+    const updateSplitRow = (splitRow, split) => {
+        splitRow.children[2].textContent = split.splitString;
     };
 
     const syncSplits = (message) => {
-        const splitRows = document.getElementById("splitRows");
-        splitRows.innerHTML = '';
+        const splitRowsContainer = document.getElementById("body__container");
+        const splitRows = splitRowsContainer.children
 
         message.splits
-            .map(createSplitView)
-            .forEach((splitView) => splitRows.appendChild(splitView));
+            .forEach((split, splitIndex) => {
+                if (splitIndex >= splitRows.length) {
+                    const splitRow = createSplitRow(split, splitIndex);
+                    splitRowsContainer.appendChild(splitRow);
+                } else {
+                    const splitRow = splitRows[splitIndex];
+                    updateSplitRow(splitRow, split);
+                }
+            });
 
         const currentSplitViewId = splitIndexToElementId(message.splitIndex);
-        currentSplitView = document.getElementById(currentSplitViewId);
+        currentSplitRow = document.getElementById(currentSplitViewId);
     }
 
     window.addEventListener("message", event => {
@@ -117,10 +123,22 @@
                 <th class="header__time">Time</th>
             </tr>
         </thead>
-        <tbody id="splitRows"></tbody>
+        <tbody id="body__container"></tbody>
         <tfoot>
             <tr>
-                <td id="currentTimeString" colspan="3">0.00</td>
+                <td colspan="3">
+                    <div id="footer__controls">
+                        <button id="footer__add" class="footer__button" onclick="addSplit()">
+                            <span class="codicon codicon-add"></span>
+                        </button>
+                        <button id="footer__remove" class="footer__button">
+                            <span class="codicon codicon-remove"></span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td id="footer__time" colspan="3">0.00</td>
             </tr>
         </tfoot>
     </table>
@@ -131,7 +149,6 @@
     <button onclick="splitTimer()">Split</button>
     <button onclick="resetTimer()">Reset</button>
     <hr>
-    <button onclick="addSplit()">Add Split</button>
 </body>
 
 </html>

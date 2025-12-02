@@ -10,13 +10,15 @@ class SidebarProvider implements vscode.WebviewViewProvider {
 
     private htmlUri: vscode.Uri;
     private cssUri: vscode.Uri;
+    private codiconsUri: vscode.Uri;
 
     private view?: vscode.WebviewView;
     private runManager: RunManager;
 
-    constructor(htmlUri: vscode.Uri, cssUri: vscode.Uri) {
+    constructor(htmlUri: vscode.Uri, cssUri: vscode.Uri, codiconsUri: vscode.Uri) {
         this.htmlUri = htmlUri;
         this.cssUri = cssUri;
+        this.codiconsUri = codiconsUri;
         this.runManager = new RunManager(this.sendMessage);
     }
     
@@ -26,10 +28,23 @@ class SidebarProvider implements vscode.WebviewViewProvider {
 
         let html = fs.readFileSync(this.htmlUri.fsPath, "utf-8");
         const cssUri = webviewView.webview.asWebviewUri(this.cssUri);
-        webviewView.webview.html = html.replace("{{styles}}", cssUri.toString());
+        const codiconsUri = webviewView.webview.asWebviewUri(this.codiconsUri);
+        webviewView.webview.html = html
+            .replace("{{styles}}", cssUri.toString())
+            .replace("{{codicons}}", codiconsUri.toString());
 
-        this.runManager.init();
         webviewView.webview.onDidReceiveMessage(this.runManager.didReceiveMessage);
+        this.runManager.sync();
+
+        const disposables: vscode.Disposable[] = [];
+        disposables.push(webviewView.onDidChangeVisibility(() => {
+            if (webviewView.visible) {
+                this.runManager.sync();
+            }
+        }));
+        disposables.push(webviewView.onDidDispose(() => {
+            disposables.forEach(d => d.dispose());
+        }));
     };
 
     private sendMessage = (message: Message) => {

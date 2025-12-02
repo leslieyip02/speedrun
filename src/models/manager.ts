@@ -26,7 +26,7 @@ class RunManager {
         this.splitIndex = 0;
     }
 
-    init = () => {
+    sync = () => {
         this.syncTimer();
         this.syncSplits();
     };
@@ -52,7 +52,7 @@ class RunManager {
                 return;
 
             case "addSplit":
-                this.addSplit(message as AddSplitMessage);
+                this.addSplit();
                 return;
 
             default:
@@ -93,7 +93,7 @@ class RunManager {
         this.syncSplits();
     };
 
-    private addSplit = (message: AddSplitMessage) => {
+    private addSplit = () => {
         this.splits.push(new Split());
         this.syncSplits();
     };
