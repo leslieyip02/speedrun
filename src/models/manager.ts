@@ -1,7 +1,7 @@
 import {
     Message,
     SendMessageCallback,
-    AddSplitMessage,
+    UpdateSplitLabelMessage,
 } from "./message";
 import Split from "./split";
 import Time from "./time";
@@ -55,6 +55,10 @@ class RunManager {
                 this.addSplit();
                 return;
 
+            case "updateSplitLabel":
+                this.updateSplitLabel(message as UpdateSplitLabelMessage);
+                return;
+
             default:
                 throw new Error(`unexpected message: ${message}`);
         }
@@ -98,9 +102,14 @@ class RunManager {
         this.syncSplits();
     };
 
+    private updateSplitLabel = (message: UpdateSplitLabelMessage) => {
+        const { splitIndex, label } = message;
+        this.splits[splitIndex].updateLabel(label);
+    };
+
     private tick = () => {
         this.time = this.time.increment(10);
-        this.splits[this.splitIndex].update(this.time.toSplitString());
+        this.splits[this.splitIndex].updateActualTimeString(this.time.toSplitString());
         this.syncTimer();
     };
 
@@ -115,11 +124,7 @@ class RunManager {
     private syncSplits = () => {
         this.sendMessage({
             messageType: "syncSplits",
-            splits: this.splits.map((split) => {
-                return {
-                    splitString: split.toString(),
-                };
-            }),
+            splits: this.splits.map((split) => split.serialize()),
             splitIndex: this.splitIndex,
         });
     };

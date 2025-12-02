@@ -4,22 +4,31 @@ class Split {
 
     private static placeholderTimeString = "-";
 
+    private label: string;
     private actualTimeString: string;
 
     constructor() {
+        this.label = Split.placeholderTimeString;
         this.actualTimeString = Split.placeholderTimeString;
     }
 
-    update = (timeString: string) => {
+    updateActualTimeString = (timeString: string) => {
         this.actualTimeString = timeString;
+    };
+
+    updateLabel = (label: string) => {
+        this.label = label;
     };
 
     reset = () => {
         this.actualTimeString = Split.placeholderTimeString;
     };
 
-    toString = () => {
-        return this.actualTimeString;
+    serialize = () => {
+        return {
+            label: this.label,
+            splitString: this.actualTimeString,
+        };
     };
 }
 

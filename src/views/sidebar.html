@@ -43,6 +43,14 @@
         });
     };
 
+    const updateSplitLabel = (splitIndex, label) => {
+        vscode.postMessage({
+            messageType: "updateSplitLabel",
+            splitIndex: splitIndex,
+            label: label,
+        });
+    };
+
     let currentSplitRow = null;
     let footerTimeView = null;
 
@@ -67,7 +75,11 @@
         splitRow.id = splitIndexToElementId(splitIndex);
         splitRow.innerHTML = `
             <td>
-                <input type="text" value="-" />
+                <input
+                    type="text"
+                    value=${split.label}
+                    onchange="updateSplitLabel(${splitIndex}, this.value)"
+                />
             </td>
             <td>-</td>
             <td>${split.splitString}</td>`;
