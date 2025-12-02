@@ -1,0 +1,81 @@
+body {
+    margin: 0;
+    padding: 0;
+    /* font-family: var(--vscode-font-family); */
+    font-family: monospace;
+    background: var(--vscode-sidebar-background);
+}
+
+table {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.header__split {
+    width: 50%;
+}
+
+.header__diff {
+    width: 20%;
+}
+
+.header__time {
+    width: 30%;
+}
+
+thead,
+tfoot {
+    background-color: #0f0f0f;
+}
+
+th {
+    border-bottom: 2px solid #6a6a6a;
+    padding: 8px 10px;
+}
+
+td:first-of-type {
+    text-align: left;
+}
+
+td {
+    border-top: 1px solid #232323;
+    padding: 8px 10px;
+    text-align: right;
+}
+
+tbody>tr {
+    background-color: #171717;
+}
+
+tbody>tr:nth-of-type(even) {
+    background-color: #0f0f0f;
+}
+
+#currentTimeString {
+    font-weight: bold;
+    text-align: right;
+    font-size: 2.4rem;
+
+    color: transparent;
+    background-image: linear-gradient(#6bbef1, #2f98d9);
+    background-clip: text;
+}
+
+/* .item {
+  padding: 8px 12px;
+  border-radius: 6px;
+  margin-bottom: 6px;
+  background: var(--vscode-list-hoverBackground);
+  cursor: pointer;
+}
+
+.item.special {
+  background: var(--vscode-editor-inactiveSelectionBackground);
+  color: var(--vscode-editor-foreground);
+}
+
+.item:hover {
+  background: var(--vscode-list-activeSelectionBackground);
+} */
