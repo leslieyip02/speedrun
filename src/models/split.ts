@@ -2,32 +2,58 @@ import Time from "./time";
 
 class Split {
 
-    private static placeholderTimeString = "-";
+    private static placeholderString = "-";
 
     private label: string;
-    private actualTimeString: string;
+    private actualTime: Time | null;
+    private targetTime: Time | null;
 
     constructor() {
-        this.label = Split.placeholderTimeString;
-        this.actualTimeString = Split.placeholderTimeString;
+        this.label = Split.placeholderString;
+        this.actualTime = null;
+        this.targetTime = null;
     }
-
-    updateActualTimeString = (timeString: string) => {
-        this.actualTimeString = timeString;
-    };
 
     updateLabel = (label: string) => {
         this.label = label;
     };
 
+    updateTarget = (time: Time) => {
+        this.targetTime = time;
+    };
+
+    updateTime = (time: Time) => {
+        this.actualTime = time;
+    };
+
     reset = () => {
-        this.actualTimeString = Split.placeholderTimeString;
+        this.actualTime = null;
+    };
+
+    private serializeDiff = () => {
+        if (this.targetTime === null || this.actualTime === null) {
+            return Split.placeholderString;
+        }
+
+        const diff = this.targetTime.difference(this.actualTime);
+        const prefix = diff >= 0 ? "+" : "-";
+        return prefix + Time.fromMilliseconds(Math.abs(diff)).toSplitString();
+    };
+
+    private serializeTargetTime = () => {
+        return this.targetTime?.toSplitString() ?? Split.placeholderString;
+    };
+
+    private serializeActualTime = () => {
+        return this.actualTime?.toSplitString() ?? Split.placeholderString;
     };
 
     serialize = () => {
         return {
             label: this.label,
-            splitString: this.actualTimeString,
+            diff: this.serializeDiff(),
+            target: this.serializeTargetTime(),
+            actual: this.serializeActualTime(),
         };
     };
 }

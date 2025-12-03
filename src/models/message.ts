@@ -4,6 +4,7 @@ type MessageType = "startTimer"
     | "splitTimer"
     | "addSplit"
     | "updateSplitLabel"
+    | "updateSplitTarget"
     | "syncTimer"
     | "syncSplits";
 
@@ -16,7 +17,12 @@ type Message = BaseMessage | SyncTimerMessage | SyncSplitsMessage;
 type UpdateSplitLabelMessage = BaseMessage & {
     splitIndex: number;
     label: string;
-}
+};
+
+type UpdateSplitTargetMessage = BaseMessage & {
+    splitIndex: number;
+    targetMilliseconds: number;
+};
 
 type SyncTimerMessage = BaseMessage & {
     fullString: string;
@@ -26,7 +32,9 @@ type SyncTimerMessage = BaseMessage & {
 type SyncSplitsMessage = BaseMessage & {
     splits: {
         label: string,
-        splitString: string,
+        diff: string,
+        target: string,
+        actual: string,
     }[];
     splitIndex: number;
 };
@@ -36,6 +44,7 @@ type SendMessageCallback = (message: Message) => void;
 export type {
     Message,
     UpdateSplitLabelMessage,
+    UpdateSplitTargetMessage,
     SyncTimerMessage,
     SyncSplitsMessage,
     SendMessageCallback,

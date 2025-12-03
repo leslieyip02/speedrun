@@ -13,15 +13,19 @@ table {
 }
 
 .header__split {
-    width: 50%;
+    width: 40%;
 }
 
 .header__diff {
     width: 20%;
 }
 
+.header__target {
+    width: 20%;
+}
+
 .header__time {
-    width: 30%;
+    width: 20%;
 }
 
 thead {
@@ -43,16 +47,34 @@ td {
     text-align: right;
 }
 
-td:first-of-type {
+td:first-of-type>input {
     text-align: left;
 }
 
 td>input {
+    font-family: monospace;
+    text-align: right;
+    width: 100%;
     padding: 0.2rem;
     color: var(--vscode-editor-foreground);
     background-color: transparent;
     border: 1px solid transparent;
     border-radius: 2px;
+}
+
+.row__diff--green {
+    color: green;
+}
+
+.row__diff--red {
+    color: red;
+}
+
+.row__target {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
 }
 
 td>input:hover {

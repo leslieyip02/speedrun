@@ -51,6 +51,29 @@
         });
     };
 
+    const updateSplitTarget = (splitIndex, target) => {
+        const components = target.split(":");
+        const multipliers = [
+            1000, // seconds
+            60 * 1000, // minutes,
+            60 * 60 * 1000, // hours
+        ];
+        const targetMilliseconds = multipliers.reduce(
+            (previous, multiplier, index) => {
+                if (index >= components.length) {
+                    return previous;
+                }
+                return previous + multiplier * components[components.length - 1 - index];
+            }, 0
+        );
+
+        vscode.postMessage({
+            messageType: "updateSplitTarget",
+            splitIndex: splitIndex,
+            targetMilliseconds: targetMilliseconds,
+        });
+    };
+
     let currentSplitRow = null;
     let footerTimeView = null;
 
@@ -67,27 +90,58 @@
         if (!currentSplitRow) {
             return;
         }
-        currentSplitRow.children[2].textContent = message.splitString;
+        currentSplitRow.children[3].textContent = message.splitString;
     };
 
     const createSplitRow = (split, splitIndex) => {
+        const { label } = split;
         const splitRow = document.createElement("tr");
         splitRow.id = splitIndexToElementId(splitIndex);
         splitRow.innerHTML = `
             <td>
                 <input
                     type="text"
-                    value=${split.label}
+                    value=${label}
                     onchange="updateSplitLabel(${splitIndex}, this.value)"
                 />
             </td>
-            <td>-</td>
-            <td>${split.splitString}</td>`;
+            <td></td>
+            <td class="row__target">
+                <input
+                    type="text"
+                    value="-"
+                    onchange="updateSplitTarget(${splitIndex}, this.value)"
+                />
+            </td>
+            <td></td>`;
+        syncSplitRow(splitRow, split);
         return splitRow;
     };
 
-    const updateSplitRow = (splitRow, split) => {
-        splitRow.children[2].textContent = split.splitString;
+    const syncSplitDiff = (splitRow, diff) => {
+        if (diff === "-") {
+            splitRow.children[1].className = "";
+        } else {
+            splitRow.children[1].className = diff[0] === "+"
+                ? "row__diff--green"
+                : "row__diff--red";
+        }
+        splitRow.children[1].textContent = diff;
+    };
+
+    const syncSplitTarget = (splitRow, target) => {
+        splitRow.children[2].value = target;
+    };
+
+    const syncSplitActual = (splitRow, actual) => {
+        splitRow.children[3].textContent = actual;
+    };
+
+    const syncSplitRow = (splitRow, split) => {
+        const { diff, target, actual } = split;
+        syncSplitDiff(splitRow, diff);
+        syncSplitTarget(splitRow, target);
+        syncSplitActual(splitRow, actual);
     };
 
     const syncSplits = (message) => {
@@ -101,7 +155,7 @@
                     splitRowsContainer.appendChild(splitRow);
                 } else {
                     const splitRow = splitRows[splitIndex];
-                    updateSplitRow(splitRow, split);
+                    syncSplitRow(splitRow, split);
                 }
             });
 
@@ -132,13 +186,14 @@
             <tr>
                 <th class="header__split">Split</th>
                 <th class="header__diff">+/-</th>
+                <th class="header__target">Target</th>
                 <th class="header__time">Time</th>
             </tr>
         </thead>
         <tbody id="body__container"></tbody>
         <tfoot>
             <tr>
-                <td colspan="3">
+                <td colspan="4">
                     <div id="footer__controls">
                         <button id="footer__add" class="footer__button" onclick="addSplit()">
                             <span class="codicon codicon-add"></span>
@@ -150,7 +205,7 @@
                 </td>
             </tr>
             <tr>
-                <td id="footer__time" colspan="3">0.00</td>
+                <td id="footer__time" colspan="4">0.00</td>
             </tr>
         </tfoot>
     </table>

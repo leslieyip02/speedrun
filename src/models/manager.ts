@@ -2,6 +2,7 @@ import {
     Message,
     SendMessageCallback,
     UpdateSplitLabelMessage,
+    UpdateSplitTargetMessage,
 } from "./message";
 import Split from "./split";
 import Time from "./time";
@@ -59,6 +60,10 @@ class RunManager {
                 this.updateSplitLabel(message as UpdateSplitLabelMessage);
                 return;
 
+            case "updateSplitTarget":
+                this.updateSplitTarget(message as UpdateSplitTargetMessage);
+                return;
+
             default:
                 throw new Error(`unexpected message: ${message}`);
         }
@@ -107,9 +112,15 @@ class RunManager {
         this.splits[splitIndex].updateLabel(label);
     };
 
+    private updateSplitTarget = (message: UpdateSplitTargetMessage) => {
+        const { splitIndex, targetMilliseconds } = message;
+        const targetTime = Time.fromMilliseconds(targetMilliseconds);
+        this.splits[splitIndex].updateTarget(targetTime);
+    };
+
     private tick = () => {
         this.time = this.time.increment(10);
-        this.splits[this.splitIndex].updateActualTimeString(this.time.toSplitString());
+        this.splits[this.splitIndex].updateTime(this.time);
         this.syncTimer();
     };
 

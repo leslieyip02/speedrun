@@ -81,7 +81,7 @@ class Time {
     };
 
     difference = (other: Time) => {
-        return Time.fromMilliseconds(this.toMilliseconds() - other.toMilliseconds());
+        return this.toMilliseconds() - other.toMilliseconds();
     };
 
     equals = (other: any) => {
