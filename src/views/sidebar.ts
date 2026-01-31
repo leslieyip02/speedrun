@@ -2,11 +2,10 @@ import * as vscode from 'vscode';
 import RunManager from '../models/manager';
 import { Message } from '../models/message';
 import fs from 'fs';
-import path from 'path';
 
 class SidebarProvider implements vscode.WebviewViewProvider {
 
-    public static readonly viewType = 'speedrun.sidebarView';
+    public static readonly viewType = "speedrun.sidebarView";
 
     private htmlUri: vscode.Uri;
     private cssUri: vscode.Uri;
@@ -21,7 +20,7 @@ class SidebarProvider implements vscode.WebviewViewProvider {
         this.codiconsUri = codiconsUri;
         this.runManager = new RunManager(this.sendMessage);
     }
-    
+
     resolveWebviewView = (webviewView: vscode.WebviewView) => {
         this.view = webviewView;
         webviewView.webview.options = { enableScripts: true };
@@ -36,7 +35,7 @@ class SidebarProvider implements vscode.WebviewViewProvider {
         webviewView.webview.onDidReceiveMessage(this.runManager.didReceiveMessage);
         this.runManager.sync();
 
-        const disposables: vscode.Disposable[] = [];
+        const disposables: vscode.Disposable[] = this.runManager.registerCommands();
         disposables.push(webviewView.onDidChangeVisibility(() => {
             if (webviewView.visible) {
                 this.runManager.sync();

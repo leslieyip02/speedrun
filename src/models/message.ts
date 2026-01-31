@@ -1,7 +1,6 @@
 type MessageType = "startTimer"
     | "stopTimer"
     | "resetTimer"
-    | "splitTimer"
     | "addSplit"
     | "removeSplit"
     | "updateSplitLabel"

@@ -25,12 +25,6 @@
         });
     };
 
-    const splitTimer = () => {
-        vscode.postMessage({
-            messageType: "splitTimer"
-        });
-    };
-
     const resetTimer = () => {
         vscode.postMessage({
             messageType: "resetTimer",
@@ -215,19 +209,6 @@
     </div>
 
     <footer id="run__controls">
-        <button class="run__button" onclick="startTimer()">
-            <span class="codicon codicon-play"></span>
-            Start
-        </button>
-        <button class="run__button" onclick="stopTimer()">
-            <span class="codicon codicon-stop-circle"></span>
-            Stop
-        </button>
-        <button class="run__button" onclick="splitTimer()">
-            <span class="codicon codicon-flag"></span>
-            Split
-        </button>
-
         <button class="run__button" onclick="addSplit()">
             <span class="codicon codicon-add"></span>
             Add
@@ -237,6 +218,14 @@
             Remove
         </button>
 
+        <button class="run__button" onclick="startTimer()">
+            <span class="codicon codicon-play"></span>
+            Start
+        </button>
+        <button class="run__button" onclick="stopTimer()">
+            <span class="codicon codicon-stop-circle"></span>
+            Stop
+        </button>
         <button class="run__button" onclick="resetTimer()">
             <span class="codicon codicon-clear-all"></span>
             Reset

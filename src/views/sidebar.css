@@ -96,7 +96,6 @@ td>input:hover {
 }
 
 tbody {
-    /* display: block; */
     overflow-y: auto;
     flex: 1;
 }
@@ -129,8 +128,8 @@ tbody>tr:nth-of-type(even) {
 }
 
 #run__controls {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
     gap: 0.4rem;
     padding: 0.5rem;
     border-top: 2px solid #6a6a6a;
@@ -174,3 +173,6 @@ tbody>tr:nth-of-type(even) {
     color: #ffffff;
 }
 
+.run__button:last-child {
+    grid-column: span 2;
+}

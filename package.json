@@ -1,7 +1,7 @@
 {
   "name": "speedrun",
   "displayName": "speedrun",
-  "description": "",
+  "description": "Speedrun Timer for VS Code",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.106.0"
@@ -16,7 +16,7 @@
       "activitybar": [
         {
           "id": "sidebarContainer",
-          "title": "TimeSplit",
+          "title": "speedrun",
           "icon": "assets/timer-icon.svg"
         }
       ]
@@ -26,11 +26,42 @@
         {
           "type": "webview",
           "id": "speedrun.sidebarView",
-          "name": "Speedrun Timer",
+          "name": "timer",
           "icon": "assets/timer-icon.svg"
         }
       ]
-    }
+    },
+    "commands": [
+      {
+        "command": "speedrun.Start",
+        "title": "Start/Split run"
+      },
+      {
+        "command": "speedrun.Stop",
+        "title": "Stop run"
+      },
+      {
+        "command": "speedrun.Reset",
+        "title": "Reset run"
+      }
+    ],
+    "keybindings": [
+      {
+        "key": "crtl+k crtl+g",
+        "mac": "cmd+k cmd+g",
+        "command": "speedrun.Start"
+      },
+      {
+        "key": "crtl+k crtl+h",
+        "mac": "cmd+k cmd+h",
+        "command": "speedrun.Stop"
+      },
+      {
+        "key": "crtl+k crtl+j",
+        "mac": "cmd+k cmd+j",
+        "command": "speedrun.Reset"
+      }
+    ]
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",

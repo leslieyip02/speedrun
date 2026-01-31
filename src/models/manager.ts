@@ -1,3 +1,4 @@
+import * as vscode from 'vscode';
 import {
     Message,
     SendMessageCallback,
@@ -27,6 +28,14 @@ class RunManager {
         this.splitIndex = 0;
     }
 
+    registerCommands = () => {
+        return [
+            vscode.commands.registerCommand("speedrun.Start", this.startTimer),
+            vscode.commands.registerCommand("speedrun.Stop", this.stopTimer),
+            vscode.commands.registerCommand("speedrun.Reset", this.resetTimer),
+        ];
+    };
+
     sync = () => {
         this.syncTimer();
         this.syncSplits();
@@ -42,10 +51,6 @@ class RunManager {
 
             case "stopTimer":
                 this.stopTimer();
-                return;
-
-            case "splitTimer":
-                this.splitTimer();
                 return;
 
             case "resetTimer":
@@ -75,6 +80,7 @@ class RunManager {
 
     private startTimer = () => {
         if (this.timerCancel) {
+            this.splitTimer();
             return;
         }
         this.timerCancel = setInterval(this.tick, 10);
@@ -86,6 +92,7 @@ class RunManager {
         }
         clearInterval(this.timerCancel);
         this.timerCancel = null;
+        this.syncSplits();
     };
 
     private resetTimer = () => {
@@ -105,7 +112,8 @@ class RunManager {
         }
 
         if (this.splitIndex === this.splits.length - 1) {
-            this.addSplit();
+            this.stopTimer();
+            return;
         }
 
         this.splitIndex++;
