@@ -1,7 +1,10 @@
 {
   "name": "speedrun",
   "displayName": "speedrun",
-  "description": "Speedrun Timer for VS Code",
+  "description": "LiveSplit-style speedrun timer for VS Code",
+  "repository": {
+    "url": "https://github.com/leslieyip02/speedrun"
+  },
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.106.0"
@@ -17,7 +20,7 @@
         {
           "id": "sidebarContainer",
           "title": "speedrun",
-          "icon": "assets/timer-icon.svg"
+          "icon": "assets/timer-icon.png"
         }
       ]
     },
@@ -27,7 +30,7 @@
           "type": "webview",
           "id": "speedrun.sidebarView",
           "name": "timer",
-          "icon": "assets/timer-icon.svg"
+          "icon": "assets/timer-icon.png"
         }
       ]
     },
