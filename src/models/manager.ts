@@ -56,6 +56,10 @@ class RunManager {
                 this.addSplit();
                 return;
 
+            case "removeSplit":
+                this.removeSplit();
+                return;
+
             case "updateSplitLabel":
                 this.updateSplitLabel(message as UpdateSplitLabelMessage);
                 return;
@@ -95,15 +99,30 @@ class RunManager {
     };
 
     private splitTimer = () => {
-        if (this.splitIndex === this.splits.length) {
+        if (!this.timerCancel) {
+            this.startTimer();
             return;
         }
+
+        if (this.splitIndex === this.splits.length - 1) {
+            this.addSplit();
+        }
+
         this.splitIndex++;
         this.syncSplits();
     };
 
     private addSplit = () => {
         this.splits.push(new Split());
+        this.syncSplits();
+    };
+
+    private removeSplit = () => {
+        if (this.splits.length === 1) {
+            return;
+        }
+
+        this.splits.pop();
         this.syncSplits();
     };
 

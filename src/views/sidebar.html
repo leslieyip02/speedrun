@@ -43,6 +43,12 @@
         });
     };
 
+    const removeSplit = () => {
+        vscode.postMessage({
+            messageType: "removeSplit",
+        });
+    };
+
     const updateSplitLabel = (splitIndex, label) => {
         vscode.postMessage({
             messageType: "updateSplitLabel",
@@ -75,17 +81,17 @@
     };
 
     let currentSplitRow = null;
-    let footerTimeView = null;
+    let tableTimeView = null;
 
     const splitIndexToElementId = (splitIndex) => {
         return `split-${splitIndex}`;
     };
 
     const syncTimer = (message) => {
-        if (!footerTimeView) {
-            footerTimeView = document.getElementById("footer__time");
+        if (!tableTimeView) {
+            tableTimeView = document.getElementById("table__time");
         }
-        footerTimeView.textContent = message.fullString;
+        tableTimeView.textContent = message.fullString;
 
         if (!currentSplitRow) {
             return;
@@ -148,6 +154,11 @@
         const splitRowsContainer = document.getElementById("body__container");
         const splitRows = splitRowsContainer.children
 
+        while (splitRows.length > message.splits.length) {
+            const lastRow = splitRowsContainer.lastElementChild;
+            splitRowsContainer.removeChild(lastRow);
+        }
+
         message.splits
             .forEach((split, splitIndex) => {
                 if (splitIndex >= splitRows.length) {
@@ -161,6 +172,9 @@
 
         const currentSplitViewId = splitIndexToElementId(message.splitIndex);
         currentSplitRow = document.getElementById(currentSplitViewId);
+
+        const tableContainerView = document.getElementById("table__container")
+        tableContainerView.scrollTop = tableContainerView.scrollHeight;
     }
 
     window.addEventListener("message", event => {
@@ -181,41 +195,53 @@
 </script>
 
 <body>
-    <table>
-        <thead>
-            <tr>
-                <th class="header__split">Split</th>
-                <th class="header__diff">+/-</th>
-                <th class="header__target">Target</th>
-                <th class="header__time">Time</th>
-            </tr>
-        </thead>
-        <tbody id="body__container"></tbody>
-        <tfoot>
-            <tr>
-                <td colspan="4">
-                    <div id="footer__controls">
-                        <button id="footer__add" class="footer__button" onclick="addSplit()">
-                            <span class="codicon codicon-add"></span>
-                        </button>
-                        <button id="footer__remove" class="footer__button">
-                            <span class="codicon codicon-remove"></span>
-                        </button>
-                    </div>
-                </td>
-            </tr>
-            <tr>
-                <td id="footer__time" colspan="4">0.00</td>
-            </tr>
-        </tfoot>
-    </table>
+    <div id="table__container">
+        <table>
+            <thead>
+                <tr>
+                    <th class="header__split">Split</th>
+                    <th class="header__diff">+/-</th>
+                    <th class="header__target">Target</th>
+                    <th class="header__time">Time</th>
+                </tr>
+            </thead>
+            <tbody id="body__container"></tbody>
+            <tfoot>
+                <tr>
+                    <td id="table__time" colspan="4">0.00</td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
 
-    <hr>
-    <button onclick="startTimer()">Start</button>
-    <button onclick="stopTimer()">Stop</button>
-    <button onclick="splitTimer()">Split</button>
-    <button onclick="resetTimer()">Reset</button>
-    <hr>
+    <footer id="run__controls">
+        <button class="run__button" onclick="startTimer()">
+            <span class="codicon codicon-play"></span>
+            Start
+        </button>
+        <button class="run__button" onclick="stopTimer()">
+            <span class="codicon codicon-stop-circle"></span>
+            Stop
+        </button>
+        <button class="run__button" onclick="splitTimer()">
+            <span class="codicon codicon-flag"></span>
+            Split
+        </button>
+
+        <button class="run__button" onclick="addSplit()">
+            <span class="codicon codicon-add"></span>
+            Add
+        </button>
+        <button class="run__button" onclick="removeSplit()">
+            <span class="codicon codicon-remove"></span>
+            Remove
+        </button>
+
+        <button class="run__button" onclick="resetTimer()">
+            <span class="codicon codicon-clear-all"></span>
+            Reset
+        </button>
+    </footer>
 </body>
 
 </html>

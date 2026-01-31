@@ -1,15 +1,25 @@
 body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100vh;
     margin: 0;
     padding: 0;
     font-family: monospace;
-    background: var(--vscode-sidebar-background);
+    background: #0f0f0f;
+}
+
+#table__container {
+  overflow: auto;
+  background-color: red;
 }
 
 table {
+    width: 100%;
     margin: 0;
     padding: 0;
-    width: 100%;
     border-collapse: collapse;
+    table-layout: fixed;
 }
 
 .header__split {
@@ -29,11 +39,15 @@ table {
 }
 
 thead {
+    position: sticky;
+    top: 0;
     background-color: #0f0f0f;
     border-bottom: 2px solid #6a6a6a;
 }
 
 tfoot {
+    position: sticky;
+    bottom: 0;
     background-color: #0f0f0f;
 }
 
@@ -63,11 +77,11 @@ td>input {
 }
 
 .row__diff--green {
-    color: green;
+    color: #00ff00;
 }
 
 .row__diff--red {
-    color: red;
+    color: #ff0000;
 }
 
 .row__target {
@@ -81,6 +95,12 @@ td>input:hover {
     border: 1px solid #aaaaaa;
 }
 
+tbody {
+    /* display: block; */
+    overflow-y: auto;
+    flex: 1;
+}
+
 tbody>tr {
     background-color: #171717;
 }
@@ -89,41 +109,16 @@ tbody>tr:nth-of-type(even) {
     background-color: #0f0f0f;
 }
 
-#footer__controls {
-    width: 100%;
-    color: var(--vscode-editor-foreground);
+#table__controls {
     display: flex;
     flex-direction: row;
-    justify-content: center;
-    align-items: center;
     gap: 0.5rem;
-}
-
-.footer__button {
-    background-color: transparent;
-    border: 1px solid #6a6a6a;
-    border-radius: 2px;
-    padding: 0.3rem;
-    flex-grow: 1;
-    display: flex;
     justify-content: center;
     align-items: center;
+    color: var(--vscode-editor-foreground);
 }
 
-.footer__button>span {
-    color: #6a6a6a;
-}
-
-.footer__button:hover {
-    cursor: pointer;
-    border: 1px solid #aaaaaa;
-}
-
-.footer__button:hover>span {
-    color: #aaaaaa;
-}
-
-#footer__time {
+#table__time {
     font-weight: bold;
     text-align: right;
     font-size: 2.4rem;
@@ -132,3 +127,50 @@ tbody>tr:nth-of-type(even) {
     background-image: linear-gradient(#6bbef1, #38a4e7);
     background-clip: text;
 }
+
+#run__controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    padding: 0.5rem;
+    border-top: 2px solid #6a6a6a;
+    background-color: #0f0f0f;
+}
+
+.run__button {
+    display: flex;
+    gap: 0.4rem;
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+
+    padding: 0.5rem 0.6rem;
+
+    font-size: 0.85rem;
+    font-family: monospace;
+
+    background-color: #1a1a1a;
+    border: 1px solid #2a2a2a;
+    border-radius: 4px;
+
+    color: var(--vscode-editor-foreground);
+    transition:
+        background-color 120ms ease,
+        border-color 120ms ease,
+        transform 80ms ease;
+}
+
+.run__button>span {
+    color: #6a6a6a;
+}
+
+.run__button:hover {
+    cursor: pointer;
+    background-color: #232323;
+    border-color: #3a3a3a;
+}
+
+.run__button:hover > span {
+    color: #ffffff;
+}
+
