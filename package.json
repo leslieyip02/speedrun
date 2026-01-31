@@ -5,6 +5,7 @@
   "repository": {
     "url": "https://github.com/leslieyip02/speedrun"
   },
+  "publisher": "LeslieYip",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.106.0"
