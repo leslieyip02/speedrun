@@ -5,8 +5,9 @@
   "repository": {
     "url": "https://github.com/leslieyip02/speedrun"
   },
+  "icon": "assets/hourglass.png",
   "publisher": "LeslieYip",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "engines": {
     "vscode": "^1.106.0"
   },

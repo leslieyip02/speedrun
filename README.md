@@ -21,3 +21,4 @@ Other than the buttons, you can use shortcuts to:
 ## Attributions
 
 - Timer icon created by [fjstudio - Flaticon](https://www.flaticon.com/free-icons/timer)
+- Hourglass icon created by [Freepik - Flaticon](https://www.flaticon.com/free-icons/hourglass)
